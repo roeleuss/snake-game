@@ -32,6 +32,18 @@ function createSnake() {
     }
 }
 
+function generateFood() {
+    food.x = Math.floor(Math.random() * 15 + 1) * box;
+    food.y = Math.floor(Math.random() * 15 + 1) * box;
+
+    for (i = 0; i < snake.length; i++) {
+        if (food.x == snake[i].x && food.y == snake[i].y) {
+            generateFood();
+            break;
+        }
+    }
+}
+
 // Function to draw the food
 function drawFood() {
     context.fillStyle = "red";
@@ -78,15 +90,6 @@ function startGame() {
     if (snakeY > 15 * box) snakeY = 0;
     if (snakeY < 0) snakeY = 15 * box;
 
-    // If the snake has eaten the food, generate a new food position
-    // Otherwise, remove the last segment of the snake to maintain the same length
-    if (snakeX != food.x || snakeY != food.y) {
-        snake.pop();
-    } else {
-        food.x = Math.floor(Math.random() * 15 + 1) * box;
-        food.y = Math.floor(Math.random() * 15 + 1) * box;
-    }
-
     // Add a new head to the snake in the direction of movement
     let newHead = {
         x: snakeX,
@@ -94,6 +97,14 @@ function startGame() {
     }
 
     snake.unshift(newHead);
+
+    // If the snake has eaten the food, generate a new food position
+    // Otherwise, remove the last segment of the snake to maintain the same length
+    if (snakeX != food.x || snakeY != food.y) {
+        snake.pop();
+    } else {
+        generateFood();
+    }
 }
 
 // Start the game loop, updating every 100ms
